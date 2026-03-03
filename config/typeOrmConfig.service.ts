@@ -42,10 +42,6 @@ class TypeOrmConfig {
 
       migrations: ['src/database/migration/*.ts'],
 
-      cli: {
-        migrationsDir: 'src/database/migration',
-      },
-
       ssl: this.isProduction(),
     };
   }

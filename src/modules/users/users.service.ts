@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { User } from './entities/user.entity';
-import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
+import { TypeOrmCrudService } from '@dataui/crud-typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ResponseError, ResponseSuccess } from '../../common/dto/response.dto';
@@ -15,8 +15,8 @@ export class UsersService extends TypeOrmCrudService<User> {
     super(repo);
   }
 
-  async findById(id: string) {
-    return await User.findOne(id);
+  async findById(id: number) {
+    return await User.findOne({ where: { id } });
   }
 
   async findByEmail(email: string) {

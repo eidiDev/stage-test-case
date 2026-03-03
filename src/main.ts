@@ -10,14 +10,21 @@ async function bootstrap() {
   app.enableCors({ origin: '*' });
 
   // Define uso do validation Pipe
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      forbidUnknownValues: true,
+    }),
+  );
 
   // Define default httpFilter
 
   // Default documentation from swagger
   const options = new DocumentBuilder()
-    .setTitle('fumico')
-    .setDescription('Fumico API')
+    .setTitle('Stage Test')
+    .setDescription('Stage Test API')
     .setVersion('0.1')
     .build();
 

@@ -17,7 +17,6 @@ import {
 import * as bcrypt from 'bcryptjs';
 import { IsArray, IsObject, IsOptional, ValidateNested } from 'class-validator';
 import { UniqueOnDatabase } from '../../../common/validations/uniqueValidation';
-import { Reminder } from '../../reminders/entities/reminder.entity';
 
 import { Type } from 'class-transformer';
 
@@ -60,11 +59,6 @@ export class User extends BaseEntity {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   public updated_at: Date;
-
-
-  @OneToMany(() => Reminder, (user) => user.owner, {cascade:true})
-  reminders: Reminder[];
-
 
   @BeforeInsert()
   @BeforeUpdate()

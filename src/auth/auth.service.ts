@@ -10,8 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../modules/users/users.service';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { User } from '../modules/users/entities/user.entity';
-import * as crypto from 'crypto';
-import * as moment from 'moment';
+
 
 @Injectable()
 export class AuthService implements CanActivate {

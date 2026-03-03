@@ -16,18 +16,18 @@ import {
 } from 'class-validator';
 
 import { DefaultFieldsEntity } from '../../entities/defaultFieldsEntity';
-import { User } from '../../users/entities/user.entity';
+import { Process } from 'src/modules/process/entities/process.entity';
 
-@Entity()
-export class Reminder extends  DefaultFieldsEntity{
+@Entity('areas')
+export class Area extends  DefaultFieldsEntity{
 
     @Column({ nullable: true, default: '' })
-    title: string;
+    name: string;
 
     @Column({ nullable: true, default: '' })
     description: string;
 
-    @ManyToOne(() => User, (user) => user.reminders, {onDelete: "CASCADE"})
-    @IsObject()
-    owner: User;
+    // process
+    @OneToMany(() => Process, (process) => process.area)
+    processes: Process[];
 }

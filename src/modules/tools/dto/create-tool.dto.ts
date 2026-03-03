@@ -1,0 +1,15 @@
+import { IsString, IsObject, IsOptional, IsBoolean } from 'class-validator';
+import { BaseEntity } from 'typeorm';
+
+export class CreateToolDto extends BaseEntity {
+
+    @IsString()
+    readonly title: string;
+
+    @IsString()
+    readonly description: string;
+
+    @IsBoolean()
+    readonly is_active: boolean;
+
+}

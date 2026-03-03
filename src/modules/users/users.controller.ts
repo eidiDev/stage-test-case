@@ -14,7 +14,7 @@ import {
   ParsedBody,
   ParsedRequest,
   CrudAuth
-} from '@nestjsx/crud';
+} from '@dataui/crud';
 import { User } from './entities/user.entity';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
@@ -38,23 +38,18 @@ import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
   },
   query: {
     exclude: ['password'],
-    alwaysPaginate: true,
-    join: {
-      reminders: {
-        eager: true
-      }
-    }
+    alwaysPaginate: true
   },
 })
-@CrudAuth({
-  property: 'user',
-  filter: ( user ) => {
-    return { 'id' : user.userId}
-  },
-  persist: (user) => {
-    return {'id' : user.userId }
-  }
-})
+// @CrudAuth({
+//   property: 'user',
+//   filter: ( user ) => {
+//     return { 'id' : user.userId}
+//   },
+//   persist: (user) => {
+//     return {'id' : user.userId }
+//   }
+// })
 
 
 @Controller('users')
