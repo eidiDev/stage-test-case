@@ -1,150 +1,215 @@
-# TEST FUMI.CO 
+# Stage Case Test API
 
-Aplicação TODO feita em NestJs + PostgresSQL + TypeScript
+API para gestão de processos empresariais desenvolvida em **NestJS + PostgreSQL + TypeScript**.
 
-Esta aplicação contém:
+Esta aplicação foi construída para simular um cenário real de gestão de processos organizacionais, permitindo controle de Processos, Áreas, Ferramentas, Pessoas e Documentos.
 
-- CRUD de Usuários (Users)
-- CRUD de lembretes (Reminders)
-- Token JWT para requests Especificas
-- Login JWT Token
+---
 
-### Ajustes e melhorias
+## 🚀 Tecnologias Utilizadas
 
-- [x] Tarefa 1 - Ajuste no DTO do CreateUser - DTO createUser no parametro do endpoint Criar Usuário, e class Validator nos campos.
-- [x] Tarefa 2 - Ajuste na entidade DefaultEntity -  Remoção do campo UUID, e transformando o ID em um type UUID
-Ajuste no filter do controller Param pelo ID e não pelo o campo UUID(removido)
-- [x] Tarefa 3 - Ajuste no DTO createReminders e updateReminders com class validator
-- [x] Tarefa 4 - Delete do usuario com cascade nos reminders
-- [x] Tarefa 5 - Filter e Persist Reminders por Usuário
-- [x] Tarefa 6 - Filter e Persist Nos Usuários
-- [ ] Tarefa 7 - Testes unitários
-- [x] Tarefa 8 - Clean Migration Perdida
-- [x] Tarefa 9 - Remoção da lógica de salvar token no banco de dados  
+- NestJS ^10.3.0
+- TypeScript ^5.3.3
+- PostgreSQL
+- TypeORM ^0.3.20
+- @dataui/crud ^5.3.4
+- JWT Authentication (@nestjs/jwt ^10.2.0)
+- Class Validator ^0.14.0
 
-## Pré-requisitos
+---
 
-* Versão NodeJs - ^14.17.0
-* PostgresSQL - de preferencia a versão 14
-* Git - ^2.24.1
+## 📦 Funcionalidades
 
-## Instalação da aplicação 
+A API possui:
 
-Clone do projeto
-```
-git clone https://github.com/eidiDev/fumico-test-api.git
-```
+- CRUD de Usuários (`/users`)
+- CRUD de Áreas (`/areas`)
+- CRUD de Ferramentas (`/tools`)
+- CRUD de Pessoas (`/people`)
+- CRUD de Documentos (`/documents`)
+- CRUD de Processos (`/process`)
+- Autenticação JWT (`/auth`)
 
-Acesso a pasta principal 
-```
-cd fumico-test-api
-```
+> A maioria dos CRUds foi implementada utilizando a biblioteca **@dataui/crud**, garantindo padronização e produtividade.
 
-Instalação de dependencias 
-```
-npm install || npm i || yarn 
-```
+---
 
-Iniciando o projeto
-```
-nest start || npm run start
-```
-Obs 1: Dentro da pasta do projeto haverá um arquivo chamado <.env.example> com um exemplo das variaveis de ambiente que serão necessárias para o projeto rodar perfeitamente.
+## 🔐 Autenticação
 
-Obs 2: É preciso gerar um token na variavel JWT_SECRET.
+- Login via JWT.
+- Apenas a rota `POST /users` (criação de usuário) não exige token.
+- Todas as demais rotas exigem: Authorization: Bearer SEU_TOKEN.
 
 
-## Rotas
+Usuários foram criados apenas para controle de autenticação e **não possuem relação com as entidades do domínio do sistema**.
 
-Usuários:
-- {/users, POST}
-- {/users, GET}
-- {/users/:uuid, GET}
-- {/users/:uuid, PATCH}
-- {/users/:uuid, PUT}
-- {/users/:uuid, DELETE}
+---
 
-Login:
-- {/auth, POST}
+## 🧩 Estrutura Base das Entidades
 
-Lembretes:
-- {/reminders, POST}
-- {/reminders, GET}
-- {/reminders/:uuid, GET}
-- {/reminders/:uuid, PATCH}
-- {/reminders/:uuid, PUT}
-- {/reminders/:uuid, DELETE}
+Todas as entidades do sistema fazem `extends` de uma entidade base contendo os seguintes campos padrão:
 
-## Entidades, campos e funcionalidades 
+### Default Entity
 
-Usuario:
-- id: number;
-- name: string;
-- is_active: boolean;
-- email: string;
-- password: string;
-- reminders: Array;
+- `uuid: string`
+- `is_active: boolean`
+- `created_at: date`
+- `updated_at: date`
 
-OBS 1: Na entidade usuários contem campos tipo data que contem o momento da criação e de atualização (created_at e updated_at)
-<b> Não é obrigatorio mandar estes campos. </b>
-OBS 2: É possivel criar lembretes a partir do usuário.
+Esses campos são automaticamente gerenciados pela aplicação.
 
+---
 
-Lembretes:
-- title: string;
-- description: string;
-- user: Object;
+## 🔗 Relações Entre Entidades
 
-OBS: Na entidade lembretes, ela faz extends com a entidade a baixo(Default Entity).
+### Processos (Entidade Central)
 
-DefaultEntity:
-- id: number;
-- uuid: string;
-- is_active: boolean;
-- created_at: date;
-- updated_at: date
+Relacionamentos:
 
-- OBS: Foi criado uma entidade com campos "default" para utilizar em outras entidadeds básicas, como a de lembretes.
+### ManyToMany
+- Processos ↔ Ferramentas
+- Processos ↔ Pessoas
+- Processos ↔ Documentos
 
-Login:
-Para realizar o login na aplicação, é necessário criar um usuário na rota de usuarios;
+### OneToMany
+- Área → Processos  
+(Uma Área pode conter vários Processos)
 
+---
 
-A aplicação irá criar a entidade, e sua senha ira ser criptografada;
+## 🛠 Endpoints
 
+### Usuários
+- `{POST} /users`
+- `{GET} /users`
+- `{GET} /users/:uuid`
+- `{PATCH} /users/:uuid`
+- `{PUT} /users/:uuid`
+- `{DELETE} /users/:uuid`
 
-No get de usuários não será possivel ver informações de senhas;
+### Autenticação
+- `{POST} /auth`
 
+### Áreas
+- `{POST} /areas`
+- `{GET} /areas`
+- `{GET} /areas/:uuid`
+- `{PATCH} /areas/:uuid`
+- `{PUT} /areas/:uuid`
+- `{DELETE} /areas/:uuid`
 
-Após criado o usuário, fazer um POST na rota /auth;
+### Ferramentas
+- `{POST} /tools`
+- `{GET} /tools`
+- `{GET} /tools/:uuid`
+- `{PATCH} /tools/:uuid`
+- `{PUT} /tools/:uuid`
+- `{DELETE} /tools/:uuid`
 
+### Pessoas
+- `{POST} /people`
+- `{GET} /people`
+- `{GET} /people/:uuid`
+- `{PATCH} /people/:uuid`
+- `{PUT} /people/:uuid`
+- `{DELETE} /people/:uuid`
 
-O sistema irá validar o usuário, caso sucesso, ira retornar um JSON com seu respectivo TOKEN;
+### Documentos
+- `{POST} /documents`
+- `{GET} /documents`
+- `{GET} /documents/:uuid`
+- `{PATCH} /documents/:uuid`
+- `{PUT} /documents/:uuid`
+- `{DELETE} /documents/:uuid`
 
+### Processos
+- `{POST} /process`
+- `{GET} /process`
+- `{GET} /process/:uuid`
+- `{PATCH} /process/:uuid`
+- `{PUT} /process/:uuid`
+- `{DELETE} /process/:uuid`
 
+---
 
-SOMENTE a rota de CRIAR USUÁRIOS({/users,POST}) não exige AUTH TOKEN na request, todas as outras rotas exigem AUTH bearer;
+## 📁 DTOs e Regras de Negócio
 
+Todas as entidades possuem:
 
-O usuário somente é permitido na entidade User: editar/ver/excluir o seu própio usuário, caso tente essas opções com um outro usuário ou listar todos os usuarios do sistema, o sistema irá retornar uma response 404 (Not Found);
+- DTO de criação
+- DTO de atualização
+- Validações com `class-validator`
+- Tipagem forte com TypeScript
 
+---
 
-O usuário somente é permitido na entidade Reminders: criar/editar/ver/excluir os própios reminders;
+## ⚙️ Pré-requisitos
 
-Relações:
+- Node.js >= 18
+- PostgreSQL
+- Git
 
-Relação Um para muitos e muitos para um Com Usuário e Lembretes;
-- UM lembrete pode ter UM usuário;
-- UM usuário pode ter N lembretes;
+---
 
-## Aplicação no HEROKU:
+## 🧪 Instalação
 
-https://fumico-test-lucas.herokuapp.com/
+Clone o projeto:
 
-## Contato
+```bash
+git clone https://github.com/seu-usuario/stage-case-test-api.git
 
-Lucas Eidi - lucaseidikumagai@gmail.com
+Entre na pasta do projeto:
 
-Project Link: [https://github.com/eidiDev/fumico-test-api](https://github.com/eidiDev/fumico-test-api)
+cd stage-case-test-api
 
+Instale as dependências:
 
+npm install
+
+Crie um arquivo .env baseado no .env.example e configure as variáveis de ambiente:
+
+DATABASE_HOST=
+DATABASE_PORT=
+DATABASE_USERNAME=
+DATABASE_PASSWORD=
+DATABASE_NAME=
+JWT_SECRET=
+
+▶️ Executando a Aplicação
+
+Modo desenvolvimento:
+
+npm run start:dev
+
+Modo produção:
+
+npm run build
+npm run start:prod
+🗄️ Migrations
+
+Gerar migration:
+
+npm run migration:generate
+
+Rodar migration:
+
+npm run migration:run
+📊 Status do Projeto
+
+✔ CRUD completo
+
+✔ Autenticação JWT
+
+✔ Relacionamentos ManyToMany e OneToMany
+
+✔ Estrutura base reutilizável (Default Entity)
+
+❌ Ainda não possui deploy
+
+👨‍💻 Autor
+
+Lucas Eidi
+📧 lucaseidikumagai@gmail.com
+
+GitHub:
+https://github.com/eidiDev
